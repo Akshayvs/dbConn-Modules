@@ -5,4 +5,3 @@ var sinon=require('sinon');
 var mockery=require('mockery');
 var assert=require('assert');
 
-describe ('')
