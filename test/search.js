@@ -20,7 +20,7 @@ describe('searchhes Document in CouchbaseDB' , function() {
 
 
         var myBucketMock={
-            get: getStub=sinon.stub.returns({  })
+            get: getStub=sinon.stub().returns({  })
 
         }
 
