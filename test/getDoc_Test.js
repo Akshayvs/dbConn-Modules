@@ -4,6 +4,7 @@
 
 
 var assert = require('assert');
+var expect = require('chai').expect;
 var mockery = require('mockery');
 var sinon = require('sinon');
 
@@ -25,7 +26,9 @@ describe('searchhes Document in CouchbaseDB' , function() {
         }
 
         mockery.registerAllowable('../lib/getDoc.js');
-        mockery.registerMock('cbConnect', myBucketMock);
+
+        mockery.registerMock('localConnect', myBucketMock);
+        //mockery.registerMock('cbConnect', myBucketMock);
         search= require('../lib/getDoc.js');
 
     });
