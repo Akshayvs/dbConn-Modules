@@ -24,9 +24,9 @@ describe('searchhes Document in CouchbaseDB' , function() {
 
         }
 
-        mockery.registerAllowable('../lib/search.js');
+        mockery.registerAllowable('../lib/getDoc.js');
         mockery.registerMock('cbConnect', myBucketMock);
-        search= require('../lib/search.js');
+        search= require('../lib/getDoc.js');
 
     });
     

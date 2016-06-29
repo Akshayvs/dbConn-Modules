@@ -1,8 +1,9 @@
 var restify= require ('restify');
 
-var serverGetCallback = require('./lib/httpReqResp');
-var cbConnect=require('./lib/cbConnect');
-var search=require('./lib/search');
+//var serverGetCallback = require('./lib/httpReqResp');
+
+
+var search=require('./lib/getDoc');
 var lookupApi=require('./lib/lookupApi.js');
 
 
@@ -12,18 +13,20 @@ server.use(restify.queryParser());
 server.use(restify.bodyParser());
 server.use(restify.requestLogger());
 
-server.on('uncaughtException', function(req, res, route, error) {
-    return res.send(500, error);
+server.on('uncaughtException', function(req, response, route, error) {
+    return response.send(500, error);
 });
 //myBucket;
 
 server.listen(2000);
 
-
-//server.get('/getDoc/:key', serverGetCallback);
+console.log("\n 1. SERVER ACTIVATED");
 lookupApi.init(server);
 
-//=========================================================================================
+
+
+
+/*=========================================================================================
 
 
 //expects callback function(error, result) {}
@@ -53,3 +56,4 @@ module.exports = function transform(input, callback) {
 
 };
 
+ */
