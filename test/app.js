@@ -1,6 +1,5 @@
-/**
- * Created by asonawane on 6/27/16.
- */
+'use strict';
+
 var assert=require('assert');
 var mockery = require('mockery');
 var sinon = require('sinon');

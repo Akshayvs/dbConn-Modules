@@ -2,10 +2,8 @@
 
 var expect = require('chai').expect;
 
-
-describe.only('transformer function', function () {
-
-
+describe('transformer function', function () {
+    
     it('extracts fields', function () {
         var cbDoc = {
             abc: 'ABCD',

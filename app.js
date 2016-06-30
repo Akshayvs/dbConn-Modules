@@ -1,7 +1,5 @@
+'use strict';
 var restify= require ('restify');
-
-//var serverGetCallback = require('./lib/httpReqResp');
-
 
 var search=require('./lib/getDoc');
 var lookupApi=require('./lib/lookupApi.js');
