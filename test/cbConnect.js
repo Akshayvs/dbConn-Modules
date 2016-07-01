@@ -6,61 +6,69 @@ var expect = require('chai').expect;
 var assert = require('chai').assert;
 
 describe('Couchbase Connection', function () {
-
+    var couchbaseMoc;
     var myBucket;
     var clusterStub = sinon.stub();
-    var openBucketStub= sinon.stub();
-    var search;
+    var openBucketStub = sinon.stub();
+    openBucketStub.withArgs('presentation_assets', 'PassW0rd').callsArgWith(2, Error);
+    var callbackStub = sinon.stub();
 
+    var search;
 
     before('enable mockery', function () {
         mockery.enable({
             useCleanCache: true
         });
 
-    });
-
-    after(mockery.disable);
-    beforeEach(function () {
-        // THIS IS THE ALIAS FUNCTION THT WILL BE CALLED INSTED OF THE REAL COUCHBASE
-        // FUNCTION IN THE cbConnect  - require('couchbase') !
-
-        var couchbaseMoc = {
+        couchbaseMoc = {
             Cluster: clusterStub.returns({
-            openBucket : openBucketStub.returns(
-                {
-                    document: 'obj'
-                })
-        })
-    }
-        ;
-
+                openBucket: openBucketStub
+            })
+        }
         mockery.registerAllowable('../lib/cbConnect.js');// so thst warning is not thrown
         mockery.registerMock('couchbase', couchbaseMoc);
         myBucket = require('../lib/cbConnect.js');
-
-
     });
 
+    afterEach(function () {
+        mockery.resetCache();
+        mockery.deregisterMock('couchbase');
+    });
 
-    it('checks if Cluster is called', function () {
+    after(function () {
+        (mockery.disable)
+    });
+
+    it('should call cluster', function () {
         assert.equal(clusterStub.callCount, 1);
     });
 
-    it('callsCluster with the currect IP address', function () {
+    it('should call Cluster with the currect IP address', function () {
         assert(clusterStub.calledWith('10.84.100.220'));
     })
 
 
-    it('calls myBucket', function() {
+    it('should call MYBUCKET', function () {
         assert.equal(openBucketStub.callCount, 1);
 
     });
 
-    it('Connects with a correct login details ', function () {
+    it('should connect with correct login details ', function () {
+        assert(openBucketStub.calledWith('presentation_assets', 'PassW0rd'));
 
-      //assert.equal('presentation_assets',openBucketStub.getCall(0).args[0]);
-        assert(openBucketStub.calledWith('presentation_assets','PassW0rd'));
+    })
+//GET FEEDBACK AS TO WHY THIS TEST IS NOT WORKING !!! VERY IMOPORTANT
+
+    it('should execute Callback function', function () {
+
+        myBucket('uidTrue', 'passTrue', callbackStub);
+        throw expect(openBucketStub).to.throw('err');
+
+    })
+
+    it('should execute Callback function', function () {
+
+        expect(openBucketStub).to.throw(Error);
 
     })
 

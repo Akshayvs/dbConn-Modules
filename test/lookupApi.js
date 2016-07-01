@@ -11,19 +11,20 @@ describe('LookupApi', function () {
     var serverStub;
     var getStub;
     var getDocStub;
-    var callbackSpy;
+    var callbackStub;
 
     before(function () {
         mockery.enable({useCleanCache: true});
         mockery.registerAllowable('../lib/metrics-collection.js');
         mockery.registerMock('./getDoc', getDocStub);
 
-        serverStub ={get: getStub =sinon.stub()
+        serverStub = {
+            get: getStub = sinon.stub()
         }
-        var returnObj='Error String'
+        var returnObj = 'Error String'
         getDocStub = sinon.stub().returns(returnObj);
 
-        callbackSpy=sinon.spy();
+        callbackStub = sinon.stub();
     });
     after(function () {
         mockery.deregisterAll();
@@ -32,7 +33,7 @@ describe('LookupApi', function () {
     beforeEach(function () {
         // requiing the function to be tested
         mockery.registerMock('./getDoc', getDocStub);
-        lookupApi=require('../lib/lookupApi.js');
+        lookupApi = require('../lib/lookupApi.js');
     });
     afterEach(function () {
         mockery.resetCache();
@@ -40,58 +41,52 @@ describe('LookupApi', function () {
     });
 
 
-    it('checks if \'get\' function is called', function() {
+    it('checks if \'get\' function is called', function () {
         lookupApi.init(serverStub);
-        assert.equal(getStub.callCount,1);
+        assert.equal(getStub.callCount, 1);
     })
 
-    it('checks if a valid 1st parameter is passed to \'get\'', function() {
+    it('checks if a valid 1st parameter is passed to \'get\'', function () {
         lookupApi.init(serverStub);
         assert(getStub.calledWith('/getDoc/:key'));
 
     })
 
-    it('checks if a request is received', function() {
+    it('checks if a request is received', function () {
         var searchKey = 'some random key';
-        var fieldsRequested='1stkey, 2ndKey, 3rdKey';
-        var key=sinon.stub();
+        var fieldsRequested = '1stkey, 2ndKey, 3rdKey';
+        var key = sinon.stub();
 
-        var request= {
+        var request = {
             params: {
                 fieldsRequested: fieldsRequested,
                 key: searchKey
             }
         }
 
-        getStub.callsArgWith(1,request);
+        getStub.callsArgWith(1, request);
         lookupApi.init(serverStub);
-        //assert.equal(getDocStub.calledWith(searchKey, fieldsRequested.split(',')), true);
-        expect(getDocStub.calledWith(searchKey, fieldsRequested.split(','))).to.be.true;
+        expect(getDocStub.calledWith(searchKey, fieldsRequested.split(','))).to.equal(true);
     })
 
-    it('should make a call to \'callback\' function', function(){
-        callbackSpy('err',null,null);
-        assert.equal(callbackSpy.callCount,1);
+    it('should make a call to \'callback\' function', function () {
+        callbackStub('err', null, null);
+        assert.equal(callbackStub.callCount, 1);
     })
 
-    it ('\'callback\' function called with exact parameters', function (){
-        lookupApi.init(serverStub);
-
-        //callbackSpy('err',null,null);
+    it('should call \'callback\' function  with error', function () {
         var searchKey = 'some random key';
-        var fieldsRequested='1stkey, 2ndKey, 3rdKey';
-        var extracFields= fieldsRequested.split(',');
+        var fieldsRequested = '1stkey, 2ndKey, 3rdKey';
+        var extracFields = fieldsRequested.split(',');
 
-        getDoc(searchKey,extracFields,callbackSpy);
+        lookupApi.init(serverStub);
 
-       expect(callbackSpy.calledWith('err',null,null)).to.equal(true);
+        getDoc(searchKey, extracFields, callbackStub);
+
+        expect(callbackStub.calledWith('err', null, null)).to.equal(true);
 
 
     })
 
-    it ('should  response.send 404', function(){
-        
-        
-    })
 })
 

@@ -1,46 +1,56 @@
 'use strict';
 
-var assert=require('assert');
+var assert = require('chai').assert;
+var expect = require('chai').expect;
 var mockery = require('mockery');
 var sinon = require('sinon');
 
-describe('main function', function(){
+describe('main function', function () {
 
-
-    var createServerStub
+    var createServerStub;
     var useStub;
     var onStub;
     var listenStub;
-    var getStub;
 
+    before('enable mockery', function () {
+        var acceptParserStub = sinon.stub();
+        var queryParserStub = sinon.stub();
+        var bodyParserStub = sinon.stub();
+        var requestLoggerStub = sinon.stub()
+        var initStub;
+        var sendStub
+        var response={
+            send:sendStub=sinon.stub()
+        };
 
-        before('enable mockery', function(){
+       // var onStub=sinon.stub()
 
-           mockery.enable(
-               {
-                useCleanCache:true
-               });
-
-            var restifyMoc={
-                createServer: createServerStub=sinon.stub().returns({
-
-                    use: useStub=sinon.stub().returns({ }),
-                    on: onStub=sinon.stub().returns({}),
-                    listen: listenStub=sinon.stub().returns({})
-                   // get: getStub=sinon.stub().returns({})
-                })
-            }
-
-         mockery.registerMock('restify',restifyMoc );
-            var app=require('../app');
+        mockery.enable({
+            useCleanCache: true
         });
 
+        var restifyMoc = {
+            createServer: createServerStub = sinon.stub().returns({
+                on: onStub = sinon.stub().withArgs('uncaughtException').callsArgWith(1,null,response),
+                use: useStub = sinon.stub().returns({}),
+                listen: listenStub = sinon.stub().returns({})
+            }),
+            acceptParser: acceptParserStub,
+            queryParser: queryParserStub,
+            bodyParser: bodyParserStub,
+            requestLogger: requestLoggerStub
+        }
+        var lookupApiMock = {
+            init: initStub = sinon.stub()
+        }
 
+        mockery.registerMock('restify', restifyMoc);
+        mockery.registerMock('./lib/lookupApi.js', lookupApiMock);
+        var app = require('../app');
+    });
 
-it('makes a call to .use' , function(){
-
-        assert.equal(useStub.callCount, 1);
-
+    it('should call server.use', function () {
+        assert.equal(useStub.callCount, 4);
     })
 
 
