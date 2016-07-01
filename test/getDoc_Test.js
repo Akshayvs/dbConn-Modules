@@ -9,10 +9,10 @@ describe('searches Document in Couchbase' , function() {
     var getStub=sinon.stub();
     getStub.withArgs(1234).returns(null,'RESULT');
     getStub.withArgs(1).returns('err')
+    var search;
 
 
-
-    before('enable mockery' , function(){
+        before('enable mockery' , function(){
        mockery.enable({
            useCleanCache: true
        });
@@ -23,7 +23,7 @@ describe('searches Document in Couchbase' , function() {
 
         mockery.registerAllowable('../lib/getDoc.js');
         mockery.registerMock('./cbConnect',myBucketMock);
-
+        search= require('../lib/getDoc.js');
 
     });
 
@@ -48,15 +48,21 @@ describe('searches Document in Couchbase' , function() {
     it('sets callback to result.value if no error is thrown', function(){
         var searchKey=1;
         var extractFields=['a','b','c'];
-        var callback;
-        var search= require('../lib/getDoc.js');
+        var callback=sinon.spy();
 
         search(searchKey,extractFields,callback);
         console.log(callback);
-        expect(callback).to.equal(err);
+        expect(callback).to.equal('err');
 
         
     })
 
+    it('should call callback once', function () {
+        var callbackSpy = sinon.spy();
+        var searchKey=1;
+        var extractFields=['a','b','c'];
+        search(searchKey, extractFields, callbackSpy);
+        expect(callbackSpy.callCount).to.equal(1);
+    })
 
 });
