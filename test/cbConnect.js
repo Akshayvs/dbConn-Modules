@@ -19,7 +19,6 @@ describe('Couchbase Connection', function () {
         mockery.enable({
             useCleanCache: true
         });
-
         couchbaseMoc = {
             Cluster: clusterStub.returns({
                 openBucket: openBucketStub
@@ -50,24 +49,20 @@ describe('Couchbase Connection', function () {
 
     it('should call MYBUCKET', function () {
         assert.equal(openBucketStub.callCount, 1);
-
     });
 
     it('should connect with correct login details ', function () {
         assert(openBucketStub.calledWith('presentation_assets', 'PassW0rd'));
-
     })
 //GET FEEDBACK AS TO WHY THIS TEST IS NOT WORKING !!! VERY IMOPORTANT
 
     it('should execute Callback function', function () {
-
         myBucket('uidTrue', 'passTrue', callbackStub);
         throw expect(openBucketStub).to.throw('err');
 
     })
 
     it('should execute Callback function', function () {
-
         expect(openBucketStub).to.throw(Error);
 
     })

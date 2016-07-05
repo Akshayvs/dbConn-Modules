@@ -11,7 +11,6 @@ server.use(restify.requestLogger());
 server.on('uncaughtException', function (req, response, route, error) {
     return response.send(500, error);
 });
-//myBucket;
 
 server.listen(2000);
 

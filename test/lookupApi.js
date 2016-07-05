@@ -41,18 +41,18 @@ describe('LookupApi', function () {
     });
 
 
-    it('checks if \'get\' function is called', function () {
+    it('should check if \'get\' function is called', function () {
         lookupApi.init(serverStub);
         assert.equal(getStub.callCount, 1);
     })
 
-    it('checks if a valid 1st parameter is passed to \'get\'', function () {
+    it('should check if a valid 1st parameter is passed to \'get\'', function () {
         lookupApi.init(serverStub);
         assert(getStub.calledWith('/getDoc/:key'));
 
     })
 
-    it('checks if a request is received', function () {
+    it('Should execute Callback of server.get', function () {
         var searchKey = 'some random key';
         var fieldsRequested = '1stkey, 2ndKey, 3rdKey';
         var key = sinon.stub();
@@ -63,18 +63,13 @@ describe('LookupApi', function () {
                 key: searchKey
             }
         }
-
         getStub.callsArgWith(1, request);
         lookupApi.init(serverStub);
         expect(getDocStub.calledWith(searchKey, fieldsRequested.split(','))).to.equal(true);
     })
 
-    it('should make a call to \'callback\' function', function () {
-        callbackStub('err', null, null);
-        assert.equal(callbackStub.callCount, 1);
-    })
 
-    it('should call \'callback\' function  with error', function () {
+    it('Should call \'callback\' function  with error', function () {
         var searchKey = 'some random key';
         var fieldsRequested = '1stkey, 2ndKey, 3rdKey';
         var extracFields = fieldsRequested.split(',');
@@ -89,4 +84,3 @@ describe('LookupApi', function () {
     })
 
 })
-

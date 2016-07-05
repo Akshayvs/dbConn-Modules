@@ -11,13 +11,10 @@ describe('searches Document in Couchbase' , function() {
     var search;
     var myBucketStub;
     var callbackStub=sinon.spy();
-    var getStub=sinon.stub();
-    getStub.withArgs(1).callsArgWith(1,'err');
-
     var result={value:'cbDoc'};
+    var getStub=sinon.stub();
     getStub.withArgs(1234).callsArgWith(1,null,result);
-
-
+    getStub.withArgs(1).callsArgWith(1,'err');
 
     before(function(){
         mockery.enable({
@@ -27,14 +24,15 @@ describe('searches Document in Couchbase' , function() {
        myBucketStub={
            get:getStub
        }
-
         mockery.registerAllowable('../lib/getDoc.js');
         mockery.registerMock('./cbConnect',myBucketStub);
         search= require('../lib/getDoc.js');
     });
 
     after('disable mockery', function(){
-       mockery.disable();
+        mockery.resetCache();
+        mockery.deregisterMock('couchbase');
+        mockery.disable();
     });
     
 

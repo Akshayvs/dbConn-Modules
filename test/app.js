@@ -23,8 +23,6 @@ describe('main function', function () {
             send:sendStub=sinon.stub()
         };
 
-       // var onStub=sinon.stub()
-
         mockery.enable({
             useCleanCache: true
         });
@@ -46,8 +44,13 @@ describe('main function', function () {
 
         mockery.registerMock('restify', restifyMoc);
         mockery.registerMock('./lib/lookupApi.js', lookupApiMock);
-        var app = require('../app');
     });
+
+    after(function () {
+        mockery.deregisterAll();
+        mockery.disable();
+    });
+
 
     it('should call server.use', function () {
         assert.equal(useStub.callCount, 4);
