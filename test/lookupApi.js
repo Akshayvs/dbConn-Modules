@@ -12,11 +12,14 @@ describe('LookupApi', function () {
     var getStub;
     var getDocStub;
     var callbackStub;
+    var transformerStub;
 
     before(function () {
         mockery.enable({useCleanCache: true});
         mockery.registerAllowable('../lib/metrics-collection.js');
         mockery.registerMock('./getDoc', getDocStub);
+        mockery.registerMock('./transformer.js', transformerStub);
+
 
         serverStub = {
             get: getStub = sinon.stub()
@@ -25,6 +28,8 @@ describe('LookupApi', function () {
         getDocStub = sinon.stub().returns(returnObj);
 
         callbackStub = sinon.stub();
+        transformerStub=sinon.stub().returns();
+
     });
     after(function () {
         mockery.deregisterAll();
@@ -69,17 +74,20 @@ describe('LookupApi', function () {
     })
 
 
-    it('Should call \'callback\' function  with error', function () {
+    it('testing CALLBACK FUNCTION', function () {
         var searchKey = 'some random key';
         var fieldsRequested = '1stkey, 2ndKey, 3rdKey';
-        var extracFields = fieldsRequested.split(',');
-
+        var key = sinon.stub();
+        var request = {
+            params: {
+                fieldsRequested: fieldsRequested,
+                key: searchKey
+            }
+        }
+        getStub.callsArgWith(1, request);
         lookupApi.init(serverStub);
-
-        getDoc(searchKey, extracFields, callbackStub);
-
-        expect(callbackStub.calledWith('err', null, null)).to.equal(true);
-
+        getDocStub.callsArgWith(2, null,'cbDoc');
+        expect(transformerStub.callCount).to.equal(1);
 
     })
 

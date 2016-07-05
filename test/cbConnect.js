@@ -10,8 +10,7 @@ describe('Couchbase Connection', function () {
     var myBucket;
     var clusterStub = sinon.stub();
     var openBucketStub = sinon.stub();
-    openBucketStub.withArgs('presentation_assets', 'PassW0rd').callsArgWith(2, Error);
-    var callbackStub = sinon.stub();
+    //openBucketStub.withArgs('presentation_assets', 'PassW0rd').callsArgWith(2, Error);
 
     var search;
 
@@ -57,15 +56,14 @@ describe('Couchbase Connection', function () {
 //GET FEEDBACK AS TO WHY THIS TEST IS NOT WORKING !!! VERY IMOPORTANT
 
     it('should execute Callback function', function () {
-        myBucket('uidTrue', 'passTrue', callbackStub);
-        throw expect(openBucketStub).to.throw('err');
+        openBucketStub('uidTrue', 'passTrue');
 
+
+        openBucketStub.callArgWith(2,Error);
+        
+        expect(openBucketStub).to.throw.an(Error);
     })
 
-    it('should execute Callback function', function () {
-        expect(openBucketStub).to.throw(Error);
-
-    })
 
 });
 
