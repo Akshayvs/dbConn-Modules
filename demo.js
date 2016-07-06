@@ -1,24 +1,12 @@
 'use strict';
 
-var a=5;
+var config=require('config');
 
-switch(a){
+var credentials=config.gannett;
 
-    case 2 :{
-
-        console.log("happpy")
-        console.log(a);
-        console.log("TWO")
-        break;
-    }
-
-    case 5:{
-        console.log("happpy")
-        console.log(a);
-        console.log("five")
-        break;
-
-    }
-}
+var username=credentials.bucket_username;
+var password=credentials.bucket_password;
 
 
+console.log(username);
+console.log(password);
