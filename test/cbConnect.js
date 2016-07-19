@@ -18,6 +18,7 @@ describe('Couchbase Connection', function () {
         mockery.enable({
             useCleanCache: true
         });
+        
         couchbaseMoc = {
             Cluster: clusterStub.returns({
                 openBucket: openBucketStub
@@ -41,7 +42,7 @@ describe('Couchbase Connection', function () {
         assert.equal(clusterStub.callCount, 1);
     });
 
-    it('should call Cluster with the currect IP address', function () {
+    it('should call Cluster with the correct IP address', function () {
         assert(clusterStub.calledWith('10.84.100.220'));
     })
 
@@ -56,15 +57,11 @@ describe('Couchbase Connection', function () {
 //GET FEEDBACK AS TO WHY THIS TEST IS NOT WORKING !!! VERY IMOPORTANT
 
     it('should execute Callback function', function () {
-        openBucketStub('uidTrue', 'passTrue');
-
-
+       
+        myopenBucketStub('uidTrue', 'passTrue');
         openBucketStub.callArgWith(2,Error);
-        
         expect(openBucketStub).to.throw.an(Error);
     })
 
 
 });
-
-
